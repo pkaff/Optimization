@@ -1,4 +1,6 @@
 from Optimization_problem import *
+from numpy import *
+from scipy import *
 
 #Abstract class Optimization_method which can be inherited from. Has a solve method which is general for all newton-methods.
 class Optimization_method(object):
