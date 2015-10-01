@@ -1,0 +1,11 @@
+python
+from Optimization_problem import *
+def inv(fun):
+	def f(x):
+		return -1*fun(-1*x)
+	return f
+
+o = Optimization_problem((lambda x: 2*x), None, inv)
+a = o.dec(o.fun)
+a(2)
+quit()
