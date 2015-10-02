@@ -1,5 +1,4 @@
 from Optimization_method import *
-from scipy.linalg import *
 
 class Newton_method(Optimization_method):
     
