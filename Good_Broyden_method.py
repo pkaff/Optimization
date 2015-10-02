@@ -1,6 +1,6 @@
-from Optimization_method import *
+from Quasi_newton_method import *
 
-class Good_Broyden_method(Optimization_method):
+class Good_Broyden_method(Quasi_newton_method):
     
     A_k_1 = array([])
     g_k_1 = array([])
@@ -8,8 +8,8 @@ class Good_Broyden_method(Optimization_method):
     def s(self, x_k, x_k_1=None):
         if x_k_1 == None:
             # Initializing the Matrix and the gradient
-            A_k_1 = eye(len(x_k)) 
-            g_k_1 = p.grad(x_k)
+            A_k_1 = np.eye(len(x_k)) 
+            g_k_1 = self.p.grad(x_k)
             return -1* A_k_1
         else:
             #Sherman Morrison formula

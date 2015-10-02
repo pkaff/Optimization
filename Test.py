@@ -40,8 +40,7 @@ class TestQuasiNewton(unittest.TestCase):
         problem = Optimization_problem(self.deg3poly, np.array([5]),gradient)
         newton = Newton_method(problem, 1.e-8)
         sol = newton.solve(self.deg4poly)
-        self.assertAlmostEqual(sol, expected_minimum, 5)
-
+        self.assertAlmostEqual(sol, expected_minimum)
     def deg4poly(self, x):
         return x**4 + 5*x**3 + 5*x**2 - 5*x - 6
 

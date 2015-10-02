@@ -7,7 +7,7 @@ class Newton_method(Quasi_newton_method):
         #return self.no_line_search()
         return self.exact_line_search(x_k, s_k)
     
-    def s(self, x_k):
+    def s(self, x_k, placeholder = None):
         h = self.acc
         dim = len(x_k)
         # computing the inverse Hessian applied to the gradient 
