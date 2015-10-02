@@ -6,6 +6,7 @@ from Bad_broyden_method import *
 class TestQuasiNewton(unittest.TestCase):
 
     #tests the newton method with a degree 2 polynomial in 1d
+    #@unittest.skip("skip")
     def test_newton_poly2(self):
         expected_minimum = 0.0
         gradient = lambda x: 2.0 * x
@@ -14,6 +15,7 @@ class TestQuasiNewton(unittest.TestCase):
         sol = newton.solve(self.deg2poly)
         np.testing.assert_array_almost_equal(sol, expected_minimum)
 
+    #@unittest.skip("skip")
     def test_good_broyden_poly2(self):
         expected_minimum = 0.0
         gradient = lambda x: 2.0 * x
@@ -25,6 +27,7 @@ class TestQuasiNewton(unittest.TestCase):
     def deg2poly(self, x):
         return x**2.0
     
+    @unittest.skip("skip")
     def test_newton_poly3(self):
         expected_minimum = - 4/3 + np.sqrt(13)/3
         gradient = lambda x: 3.0 * x**2.0 + 8.0*x + 1
@@ -36,18 +39,20 @@ class TestQuasiNewton(unittest.TestCase):
     def deg3poly(self, x):
         return x**3.0 + 4*x**2.0 + x + 1
 
+    #@unittest.skip("skip")
     def test_newton_poly4(self):
         expected_minimum = 0.326345
         gradient = lambda x: 4.0 * x**3.0 + 15.0*x**2 + 10*x + 5
-        problem = Optimization_problem(self.deg3poly, np.array([5]),gradient)
+        problem = Optimization_problem(self.deg4poly, np.array([-5]),gradient)
         newton = Newton_method(problem, 1.e-8)
         sol = newton.solve(self.deg4poly)
         np.testing.assert_array_almost_equal(sol, expected_minimum)
 
-    def test_newton_poly4(self):
+    #@unittest.skip("skip")
+    def test_good_broyden_poly4(self):
         expected_minimum = 0.326345
         gradient = lambda x: 4.0 * x**3.0 + 15.0*x**2 + 10*x + 5
-        problem = Optimization_problem(self.deg3poly, np.array([5]),gradient)
+        problem = Optimization_problem(self.deg4poly, np.array([5]),gradient)
         broyden = Good_broyden_method(problem, 1.e-8)
         sol = broyden.solve(self.deg4poly)
         np.testing.assert_array_almost_equal(sol, expected_minimum)
@@ -56,13 +61,14 @@ class TestQuasiNewton(unittest.TestCase):
         return x**4 + 5*x**3 + 5*x**2 - 5*x - 6
 
     #tests the newton method with the rosen function in 2d
-    #def test_newton_rosen(self):
-     #   expected_minimum = np.array([1, 1])
-      #  gradient = lambda x: np.array([202*x[0] - 200*x[1] - 2,200*(x[1] - x[0])])
-       # problem = Optimization_problem(self.rosen, np.array([4, 4]), gradient)
-        #newton = Newton_method(problem, 1.e-5)
-        #newton.solve(self.rosen)
-        #assert(True)
+    @unittest.skip("skip")
+    def test_newton_rosen(self):
+        expected_minimum = np.array([1, 1])
+        gradient = lambda x: np.array([202*x[0] - 200*x[1] - 2,200*(x[1] - x[0])])
+        problem = Optimization_problem(self.rosen, np.array([4, 4]), gradient)
+        newton = Newton_method(problem, 1.e-5)
+        newton.solve(self.rosen)
+        assert(True)
         
     def rosen(self, x):
         return 100*((x[1] - x[0])**2) + (1 - x[0])**2

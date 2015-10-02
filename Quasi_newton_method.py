@@ -39,7 +39,10 @@ class Quasi_newton_method(object):
         def f_alpha(a):
             return self.p.fun(x_k + a * s_k)
         #returns argmin(f(x_k + a*s_k)) with respect to a
-        return so.minimize(f_alpha, np.array([1.])).x
+        #temp = so.minimize(f_alpha, np.array([1.]))
+        #print(temp.success)
+        #return temp.x
+        return so.minimize_scalar(f_alpha).x
 
     #search method based on the Goldstein/Wolfe condition
     def inexact_line_search(self, x_k, s_k):
