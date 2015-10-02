@@ -6,7 +6,7 @@ class Newton_method(Quasi_newton_method):
         h = self.acc
         dim = len(x_k)
         # computing the inverse Hessian applied to the gradient 
-        G = np.array(np.eye(dim))
+        G = np.eye(dim)
         # computing the Hessian using finite differenzes on the gradient function
         for i in range(dim):
             unit = np.zeros(dim)
