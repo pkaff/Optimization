@@ -2,6 +2,10 @@ from Quasi_newton_method import *
 
 class Bad_broyden_method(Quasi_newton_method):
 
+    def __init__(self, prob, accuracy):
+        super().__init__(prob, accuracy)
+        self.Q_pre = None
+
     def s(self, x, x_pre = None):
         #for the initial s_0
         if x_pre == None:
