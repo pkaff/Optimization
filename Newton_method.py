@@ -2,12 +2,9 @@ from Quasi_newton_method import *
 
 class Newton_method(Quasi_newton_method):
     
-    def alpha(self, x_k, s_k):
-        # setting alpha to 1 as no line search is used
-        #return self.no_line_search()
-        return self.exact_line_search(x_k, s_k)
     
     def s(self, x_k, placeholder = None):
+
         h = self.acc
         dim = len(x_k)
         # computing the inverse Hessian applied to the gradient 
@@ -16,10 +13,6 @@ class Newton_method(Quasi_newton_method):
         for i in range(dim):
             unit = np.zeros(dim)
             unit[i] = 1
-            print(self.p.grad(x_k))
-            print(self.p.grad(x_k + h*unit))
-            print(unit)
-            print(h)
             G[:,i] = (self.p.grad(x_k + h*unit) - self.p.grad(x_k)) / h
         #Symmetrizing the Hessian
         G = 0.5 * (G + G.T)
