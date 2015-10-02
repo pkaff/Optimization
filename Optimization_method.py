@@ -9,8 +9,8 @@ class Optimization_method(object):
         self.p = prob
         self.acc = accuracy
 
-    @p.dec
-    def solve(self, f):
+
+    def solve(self, f = self.p.fun):
         self.p.fun = f
         x = x0
         while abs(x - x_pre) < accuracy:
