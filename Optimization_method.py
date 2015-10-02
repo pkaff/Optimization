@@ -29,5 +29,6 @@ class Optimization_method(object):
     def exact_line_search(self, x_k, s_k):
         return 1 #should be return argmin_alpha(x_k + alpha*s_k)
 
+    #search method based on the Goldstein/Wolfe condition
     def inexact_line_search(self, x_k, s_k):
         return 1
