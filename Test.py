@@ -44,7 +44,7 @@ class TestQuasiNewton(unittest.TestCase):
         sol = newton.solve(self.deg4poly)
         np.testing.assert_array_almost_equal(sol, expected_minimum)
 
-    def test_newton_poly4(self):
+    def test_good_broyden_poly4(self):
         expected_minimum = 0.326345
         gradient = lambda x: 4.0 * x**3.0 + 15.0*x**2 + 10*x + 5
         problem = Optimization_problem(self.deg3poly, np.array([5]),gradient)

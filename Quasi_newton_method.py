@@ -16,10 +16,14 @@ class Quasi_newton_method(object):
         self.p.fun = f
         x_pre = self.p.start
         s_k = self.s(x_pre)
+        print("s_k: ",s_k)
         a = self.alpha(x_pre, s_k)
+        print("a: ",a)
         x = x_pre + a * s_k
         while sd.euclidean(x, x_pre) > self.acc:
+            print("x: ",x)
             s_k = self.s(x, x_pre)
+            print("s_k: ",s_k)
             a = self.alpha(x, s_k)
             x_temp = x
             x = x + a * s_k
