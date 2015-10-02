@@ -2,7 +2,7 @@ from Quasi_newton_method import *
 
 class Newton_method(Quasi_newton_method):
     
-    def s(self, x_k, x_pre):
+    def s(self, x_k, placeholder = None):
         h = self.acc
         dim = len(x_k)
         # computing the inverse Hessian applied to the gradient 

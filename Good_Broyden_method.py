@@ -1,6 +1,6 @@
 from Optimization_method import *
 
-class Good_broyden_method(Optimization_method):
+class Good_broyden_method(Quasi_newton_method):
     
     def __init__(self, prob, accuracy):
         super().__init__(prob, accuracy)
@@ -10,7 +10,7 @@ class Good_broyden_method(Optimization_method):
     def s(self, x_k, x_k_1=None):
         if x_k_1 == None:
             # Initializing the Matrix and the gradient
-            self.A_k_1 = eye(len(x_k)) 
+            self.A_k_1 = np.eye(len(x_k)) 
             self.g_k_1 = self.p.grad(x_k)
             return -1* self.A_k_1
         else:
