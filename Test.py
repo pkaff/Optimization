@@ -10,15 +10,15 @@ class TestQuasiNewton(unittest.TestCase):
         problem = Optimization_problem(self.deg2poly, np.array([2]), gradient)
         newton = Newton_method(problem, 1.e-8)
         sol = newton.solve(self.deg2poly)
-        self.assertAlmostEqual(sol, expected_minimum)
+        np.testing.assert_array_almost_equal(sol, expected_minimum)
 
     def test_good_broyden_poly2(self):
         expected_minimum = 0.0
         gradient = lambda x: 2.0 * x
         problem = Optimization_problem(self.deg2poly, np.array([2]), gradient)
-        broyden = Good_Broyden_method(problem, 1.e-8)
+        broyden = Good_broyden_method(problem, 1.e-8)
         sol = broyden.solve(self.deg2poly)
-        self.assertAlmostEqual(sol, expected_minimum)
+        np.testing.assert_array_almost_equal(sol, expected_minimum)
         
     def deg2poly(self, x):
         return x**2.0
@@ -29,7 +29,7 @@ class TestQuasiNewton(unittest.TestCase):
         problem = Optimization_problem(self.deg3poly, np.array([5]), gradient)
         newton = Newton_method(problem, 1.e-8)
         sol = newton.solve(self.deg3poly)
-        self.assertAlmostEqual(sol, expected_minimum)
+        np.testing.assert_array_almost_equal(sol, expected_minimum)
 
     def deg3poly(self, x):
         return x**3.0 + 4*x**2.0 + x + 1
@@ -40,7 +40,16 @@ class TestQuasiNewton(unittest.TestCase):
         problem = Optimization_problem(self.deg3poly, np.array([5]),gradient)
         newton = Newton_method(problem, 1.e-8)
         sol = newton.solve(self.deg4poly)
-        self.assertAlmostEqual(sol, expected_minimum)
+        np.testing.assert_array_almost_equal(sol, expected_minimum)
+
+    def test_newton_poly4(self):
+        expected_minimum = 0.326345
+        gradient = lambda x: 4.0 * x**3.0 + 15.0*x**2 + 10*x + 5
+        problem = Optimization_problem(self.deg3poly, np.array([5]),gradient)
+        broyden = Good_broyden_method(problem, 1.e-8)
+        sol = broyden.solve(self.deg4poly)
+        np.testing.assert_array_almost_equal(sol, expected_minimum)
+        
     def deg4poly(self, x):
         return x**4 + 5*x**3 + 5*x**2 - 5*x - 6
 
