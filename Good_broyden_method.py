@@ -3,9 +3,9 @@ from Quasi_newton_method import *
 class Good_broyden_method(Quasi_newton_method):
     
     def __init__(self, prob, accuracy):
-        super().__init__(prob, accuracy)
-        self.A_k_1 = array([])
-        self.g_k_1 = array([])
+        super(self.__class__, self).__init__(prob, accuracy)
+        self.A_k_1 = np.array([])
+        self.g_k_1 = np.array([])
     
     def s(self, x_k, x_k_1=None):
         if x_k_1 == None:
