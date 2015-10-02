@@ -25,4 +25,10 @@ def rosen(x1, x2):
 o = Optimization_problem(rosen)
 m = Newton_method(o)
 
+
+quit()
+
+python
+from Newton_method import *
+
 quit()
