@@ -4,11 +4,10 @@ from scipy import *
 
 #Abstract class Optimization_method which can be inherited from. Has a solve method which is general for all newton-methods.
 class Optimization_method(object):
-    #Takes a Optimization_problem object, an accuracy (stop condition: when update is smaller than accuracy) and an initial guess x0, default to 0.
-    def __init__(self, prob, accuracy, x0 = 0.):
+    #Takes a Optimization_problem object and an accuracy (stop condition: when update is smaller than accuracy)
+    def __init__(self, prob, accuracy):
         self.p = prob
         self.acc = accuracy
-        self.x0 = x0
 
     @p.dec
     def solve(self, f):
@@ -24,7 +23,7 @@ class Optimization_method(object):
         return 1
 
     def exact_line_search(self, x_k, s_k):
-        
+        return 1 #should be return argmin_alpha(x_k + alpha*s_k)
 
     def inexact_line_search(self, x_k, s_k):
-
+        
