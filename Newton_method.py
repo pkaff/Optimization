@@ -2,24 +2,31 @@ from Optimization_method import *
 
 class Newton_method(Optimization_method):
     
-    def alpha(x_k):
+    def alpha(self, x_k, s_k):
         # setting alpha to 1 as no line search is used
-        return no_line_search()
+        #return self.no_line_search()
+        return self.exact_line_search(x_k, s_k)
     
-    def s(x_k, h = 1.e-5):
+    def s(self, x_k):
+        h = self.acc
+        dim = len(x_k)
         # computing the inverse Hessian applied to the gradient 
-        G = array(eye(Optimization_method.dim))
+        G = np.array(np.eye(dim))
         # computing the Hessian using finite differenzes on the gradient function
-        for i in range(p.dim):
-            unit = array(zeroes(p.dim,1))
+        for i in range(dim):
+            unit = np.zeros(dim)
             unit[i] = 1
-            G[:,i] = (p.grad(x_k+h*unit) - p.grad(x_k)) / h
-           # fij≐(f(x1,x2,…,xi+h,…,xj+k,…,xn)−f(x1,x2,…,xi+h,…,xj,…,xn)−f(x1,x2,…,xi,…,xj+k,…,xn)+f(x1,x2,…,xi,…,xj,…,xn))/(hk)
-        #Summetrizing the Hessian
-        G = 0.5 (G + G.T)
+            print(self.p.grad(x_k))
+            print(self.p.grad(x_k + h*unit))
+            print(unit)
+            print(h)
+            G[:,i] = (self.p.grad(x_k + h*unit) - self.p.grad(x_k)) / h
+        #Symmetrizing the Hessian
+        G = 0.5 * (G + G.T)
+        print "G=",G
         # Computing L with the cholesky method to compute the inverse Hessian
-        # If G is not postitv definit this will raise a LinAlgError
-        L = chololesky(G)
-        y=solve(L,p.grad(x_k))
+        # If G is not positive definite this will raise a LinAlgError
+        L = sl.cholesky(G)
+        y = sl.solve(L, self.p.grad(x_k))
         # L.T.conju() is the transposed, conjugated of L
-        return solve(L.T.conju(),y)
+        return -1 * sl.solve(L.T.conj(), y)
