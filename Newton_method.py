@@ -23,10 +23,12 @@ class Newton_method(Optimization_method):
             G[:,i] = (self.p.grad(x_k + h*unit) - self.p.grad(x_k)) / h
         #Symmetrizing the Hessian
         G = 0.5 * (G + G.T)
-        print "G=",G
         # Computing L with the cholesky method to compute the inverse Hessian
         # If G is not positive definite this will raise a LinAlgError
-        L = sl.cholesky(G)
-        y = sl.solve(L, self.p.grad(x_k))
-        # L.T.conju() is the transposed, conjugated of L
-        return -1 * sl.solve(L.T.conj(), y)
+        try:
+            L = sl.cholesky(G)
+            y = sl.solve(L, self.p.grad(x_k))
+            # L.T.conju() is the transposed, conjugated of L
+            return -1 * sl.solve(L.T.conj(), y)
+        except LinAlgError:
+            return -1*solve(G,x)
