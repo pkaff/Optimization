@@ -5,7 +5,7 @@ import scipy.linalg as sl
 import scipy.spatial.distance as sd
 
 #Abstract class Optimization_method which can be inherited from. Has a solve method which is general for all newton-methods.
-class Optimization_method(object):
+class Quasi_newton_method(object):
     #Takes a Optimization_problem object and an accuracy (stop condition: when update is smaller than accuracy)
     def __init__(self, prob, accuracy):
         self.p = prob
@@ -19,7 +19,7 @@ class Optimization_method(object):
         a = self.alpha(x_pre, s_k)
         x = x_pre + a * s_k
         while sd.euclidean(x, x_pre) > self.acc:
-            s_k = self.s(x)
+            s_k = self.s(x, x_pre)
             a = self.alpha(x, s_k)
             x_temp = x
             x = x + a * s_k
@@ -27,6 +27,10 @@ class Optimization_method(object):
             if (sd.euclidean(x, 0) > 1.e10):
                 raise Exception('Divergence')
         return x
+
+    def alpha(self, x_k, s_k):
+        #return self.no_line_search()
+        return self.exact_line_search(x_k, s_k)
 
     def no_line_search(self):
         return 1
