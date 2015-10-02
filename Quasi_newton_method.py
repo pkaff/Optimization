@@ -28,6 +28,10 @@ class Quasi_newton_method(object):
                 raise Exception('Divergence')
         return x
 
+    def alpha(self, x_k, s_k):
+        #return self.no_line_search()
+        return self.exact_line_search(x_k, s_k)
+
     def no_line_search(self):
         return 1
 
