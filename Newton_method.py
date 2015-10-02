@@ -1,6 +1,6 @@
-from Optimization_method import *
+from Quasi_newton_method import *
 
-class Newton_method(Optimization_method):
+class Newton_method(Quasi_newton_method):
     
     def alpha(self, x_k, s_k):
         # setting alpha to 1 as no line search is used
