@@ -21,5 +21,5 @@ class Newton_method(Quasi_newton_method):
             y = sl.solve(L, self.p.grad(x_k))
             # L.T.conju() is the transposed, conjugated of L
             return -1 * sl.solve(L.T.conj(), y)
-        except LinAlgError:
-            return -1*solve(G,x)
+        except sl.LinAlgError:
+            return -1*sl.solve(G, x_k)

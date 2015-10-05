@@ -8,7 +8,6 @@ class Good_broyden_method(Quasi_newton_method):
         self.g_k_1 = None
     
     def s(self, x_k, x_k_1=None):
-        print("x_k: ", x_k, x_k_1)
         if x_k_1 == None:
             # Initializing the Matrix and the gradient
             self.A_k_1 = np.eye(len(x_k)) 

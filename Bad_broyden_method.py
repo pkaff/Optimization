@@ -15,8 +15,13 @@ class Bad_broyden_method(Quasi_newton_method):
         delta = x - x_pre
         gamma = self.p.grad(x) - self.p.grad(x_pre)
         #delta[:, None] = delta transpose
-        Q = self.Q_pre + ((gamma - self.Q_pre * delta)/(delta[:,None] * delta))*delta[:,None] 
+        Q = self.Q_pre + ((gamma - self.Q_pre * delta)/(delta.T * delta))*delta.T
         self.Q_pre = Q
-        H = sl.inv(Q)
-        return -1 * H * self.o.grad(x)
+        try:
+            L = sl.cholesky(Q)
+            y = sl.solve(L, self.p.grad(x))
+            return -1 * sl.solve(L.T.conj(), y)
+        except LinAlgError:
+            H = sl.inv(Q)
+            return -1 * H * self.p.grad(x)
         
