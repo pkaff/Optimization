@@ -28,12 +28,13 @@ class Quasi_newton_method(object):
             x_pre = x_temp
             if (sd.euclidean(x, 0) > 1.e10):
                 raise Exception('Divergence')
-        print "end"
         return x
 
     def alpha(self, x_k, s_k):
         #return self.no_line_search()
-        return self.exact_line_search(x_k, s_k)
+        #return self.exact_line_search(x_k, s_k)
+        #return self.WP(x_k, s_k) #inexact line search
+        return self.Goldstein(x_k, s_k) #inexact line search 
 
     def no_line_search(self):
         return 1
@@ -46,43 +47,41 @@ class Quasi_newton_method(object):
 
     #search method. Takes as input x_k, s_k, some left/right conditions, upper/lower bounds for acceptible points and method parameters ro, (sigma), tau and chi.    
     def inexact_line_search(self, x_k, s_k, LC, RC, aL, aU, ro = 0.1, tau = 0.1, chi = 9., sigma = 0.7):
-        a = self.p.start
+
+        a0 = 0.1
 
         def f_a(a):
             return self.p.fun(x_k + a * s_k)
-
-        def fp_a(a):
-            return s_k*self.p.grad(x_k + a * s_k)
-
-        while not (LC(a) and RC(a)):
-            if not LC:
-                B1()
-            else:
-                B2()
             
+        def fp_a(a):
+            return np.dot(s_k, self.p.grad(x_k + a * s_k))         
 
-        def B1():
-            da = extra()
-            da = max(da, tau*(a - aL))
-            da = min(da, chi*(a - aL))
-            aL = a
-            a = a + da
+        def extra(a0, aL):
+            return (a0 - aL)*fp_a(a0)/(fp_a(aL) - fp_a(a0))
+
+        def inter(a0, aL):
+            return ((a0 - aL)**2)*fp_a(aL)/(2*(f_a(aL) - f_a(a0) + (a0 - aL)*fp_a(aL)))   
+
+        def B1(a0, aL):
+            da = extra(a0, aL)
+            da = max(da, tau*(a0 - aL))
+            da = min(da, chi*(a0 - aL))
+            return [a0 + da, a0]
         
-        def B2():
-            aU = min(a, aU)
-            temp = inter()
+        def B2(a0, aL, aU):
+            aU = min(a0, aU)
+            temp = inter(a0, aL)
             temp = max(temp, aL + tau*(aU - aL))
             temp = min(temp, aU - tau*(aU - aL))
-            a = temp
-
-        def extra():
-            return (a - aL)*fp_a(a)/(fp_a(aL) - fp_a(a))
-
-        def inter():
-            return ((a - aL)**2)*fp_a(aL)/(2*(f_a(aL) - f_a(a) + (a - aL)*fp_a(aL)))
+            return [temp, aU]
             
+        while not (LC(a0) and RC(a0)):
+            if not LC(a0):
+                [a0, aL] = B1(a0, aL)
+            else:
+                [a0, aU] = B2(a0, aL, aU)
 
-        return [a, f_a(a)]
+        return a0
     
     #calls inexact line search for Wolfe-Powell left and right conditions
     #parameters: x_k and s_k
@@ -97,15 +96,15 @@ class Quasi_newton_method(object):
             return self.p.fun(x_k + a * s_k)
 
         def fp_a(a):
-            return s_k*self.p.grad(x_k + a * s_k)
+            return np.dot(s_k, self.p.grad(x_k + a * s_k))
 
         def LC(a):
             return fp_a(a) >= sigma*fp_a(aL)
             
         def RC(a):
-            return f_a(a) <= f_a(aL) + ro*(a - aL)*fp_a(aL)
+            return f_a(a) <= (f_a(aL) + ro*(a - aL)*fp_a(aL))
         
-        return  inexact_line_search(self, x_k, s_k, LC, RC, aL, aU, ro, tau, chi, sigma)
+        return self.inexact_line_search(x_k, s_k, LC, RC, aL, aU, ro, tau, chi, sigma)
 
     #calls inexact line search for Goldstein left and right conditions
     #parameters: x_k and s_k
@@ -119,12 +118,12 @@ class Quasi_newton_method(object):
             return self.p.fun(x_k + a * s_k)
 
         def fp_a(a):
-            return s_k*self.p.grad(x_k + a * s_k)
+            return np.dot(s_k, self.p.grad(x_k + a * s_k))
 
         def LC(a):
-            return f_a(a) >= f_a(aL) + (1 - ro)*(a - aL)*fp_a(aL)
+            return f_a(a) >= (f_a(aL) + (1 - ro)*(a - aL)*fp_a(aL))
             
         def RC(a):
-            return f_a(a) <= f_a(aL) + ro*(a - aL)* fp_a(aL)
+            return f_a(a) <= (f_a(aL) + ro*(a - aL)* fp_a(aL))
         
-        return  inexact_line_search(self, x_k, s_k, LC, RC, aL, aU, ro, tau, chi)
+        return self.inexact_line_search(x_k, s_k, LC, RC, aL, aU, ro, tau, chi)
