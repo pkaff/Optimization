@@ -2,6 +2,8 @@ import unittest
 from Newton_method import *
 from Good_broyden_method import *
 from Bad_broyden_method import *
+from DFP import *
+from BFGS import *
 
 class TestQuasiNewton(unittest.TestCase):
 

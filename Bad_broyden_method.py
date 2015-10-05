@@ -2,26 +2,14 @@ from Quasi_newton_method import *
 
 class Bad_broyden_method(Quasi_newton_method):
 
-    def __init__(self, prob, accuracy):
-        super(self.__class__, self).__init__(prob, accuracy)
-        self.Q_pre = None
-
-    def s(self, x, x_pre = None):
-        #for the initial s_0
-        if x_pre == None:
-            self.Q_pre = np.array(np.eye(len(x)))
-            return -1 * np.array(np.eye(len(x)))
-        
-        delta = x - x_pre
-        gamma = self.p.grad(x) - self.p.grad(x_pre)
-        #delta[:, None] = delta transpose
-        Q = self.Q_pre + ((gamma - self.Q_pre * delta)/(delta.T * delta))*delta.T
-        self.Q_pre = Q
+    def update_matrix(self, gamma, delta):
+        H_k = self.H_k_1 + ((gamma - self.H_k_1 * delta)/(delta.T * delta))*delta.T
         try:
-            L = sl.cholesky(Q)
-            y = sl.solve(L, self.p.grad(x))
-            return -1 * sl.solve(L.T.conj(), y)
+            L = sl.cholesky(H_k)
+            y = sl.solve(L, np.ones(len(self.g_k_1))) #just the inverse
+            return sl.solve(L.T.conj(), y)
         except LinAlgError:
-            H = sl.inv(Q)
-            return -1 * H * self.p.grad(x)
+            H = sl.inv(H_k)
+            return H
+       
         

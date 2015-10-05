@@ -1,6 +1,6 @@
-from Quasi_newton_method import *
+from Optimization_method import *
 
-class Newton_method(Quasi_newton_method):
+class Newton_method(Optimization_method):
 
     def s(self, x_k, placeholder = None):
         h = self.acc
