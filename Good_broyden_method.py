@@ -8,15 +8,12 @@ class Good_broyden_method(Quasi_newton_method):
         self.g_k_1 = None
     
     def s(self, x_k, x_k_1=None):
-        print("x_k: ", x_k, x_k_1)
         if x_k_1 == None:
             # Initializing the Matrix and the gradient
-            print("hello")
             self.A_k_1 = np.eye(len(x_k)) 
             self.g_k_1 = self.p.grad(x_k)
             return -1* self.g_k_1
         else:
-            print("hello2")
             #Sherman Morrison formula
             temp = self.p.grad(x_k)
             gamma = temp - self.g_k_1

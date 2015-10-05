@@ -16,20 +16,19 @@ class Quasi_newton_method(object):
         self.p.fun = f
         x_pre = self.p.start
         s_k = self.s(x_pre)
-        print("s_k: ",s_k)
         a = self.alpha(x_pre, s_k)
-        print("a: ",a)
         x = x_pre + a * s_k
+        if (sd.euclidean(x, 0) > 1.e10):
+            raise Exception('Divergence')
         while sd.euclidean(x, x_pre) > self.acc:
-            print("x: ",x)
             s_k = self.s(x, x_pre)
-            print("s_k: ",s_k)
             a = self.alpha(x, s_k)
             x_temp = x
             x = x + a * s_k
             x_pre = x_temp
             if (sd.euclidean(x, 0) > 1.e10):
                 raise Exception('Divergence')
+        print "end"
         return x
 
     def alpha(self, x_k, s_k):
@@ -43,9 +42,6 @@ class Quasi_newton_method(object):
         def f_alpha(a):
             return self.p.fun(x_k + a * s_k)
         #returns argmin(f(x_k + a*s_k)) with respect to a
-        #temp = so.minimize(f_alpha, np.array([1.]))
-        #print(temp.success)
-        #return temp.x
         return so.minimize_scalar(f_alpha).x
 
     #search method. Takes as input x_k, s_k, some left/right conditions, upper/lower bounds for acceptible points and method parameters ro, (sigma), tau and chi.    

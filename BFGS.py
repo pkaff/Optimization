@@ -22,3 +22,4 @@ class BFGS(Quasi_newton_method):
             sum_2 = (np.dot(delta,gamma.T)*self.H_k_1+self.H_k_1*np.dot(gamma,delta.T))/np.dot(delta,gamma)
             H = self.H_k_1 + sum_1 - sum_2
             return -1 * H*self.g_k_1
+            
