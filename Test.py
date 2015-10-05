@@ -43,7 +43,7 @@ class TestQuasiNewton(unittest.TestCase):
     def deg2poly(self, x):
         return x**2.0
     
-    #@unittest.skip("skip")
+    @unittest.skip("skip")
     def test_newton_poly3(self): #should diverge, prints overflow stuff
         expected_minimum = - 4.0/3.0 + np.sqrt(13)/3.0
         gradient = lambda x: 3.0 * x**2.0 + 8.0*x + 1

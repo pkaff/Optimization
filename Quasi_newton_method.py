@@ -2,7 +2,7 @@ from Optimization_method import *
 
 class Quasi_newton_method(Optimization_method):
 
-    def __init__(self, prob, accuracy, lst):
+    def __init__(self, prob, accuracy, lst = 1):
         super(Quasi_newton_method, self).__init__(prob, accuracy, lst)
         self.H_k_1 = None
         self.g_k_1 = None

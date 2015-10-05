@@ -11,7 +11,7 @@ class Optimization_method(object):
     #LST = 1 -> exact line search
     #LST = 2 -> Goldstein inexact line search
     #LST = 3 -> WP inexact line search
-    def __init__(self, prob, accuracy, lst):
+    def __init__(self, prob, accuracy, lst = 1):
         self.p = prob
         self.acc = accuracy
         self.solve = prob.dec(self.solve)
