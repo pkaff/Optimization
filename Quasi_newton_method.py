@@ -1,6 +1,7 @@
 from Optimization_method import *
 
 class Quasi_newton_method(Optimization_method):
+
     def __init__(self, prob, accuracy):
         super(self.__class__, self).__init__(prob, accuracy)
         self.H_k_1 = None
@@ -20,3 +21,4 @@ class Quasi_newton_method(Optimization_method):
             H_k = self.update_matrix(gamma, delta)
             self.H_k_1 = H_k
             return -1 * np.dot(H_k, g_k)            
+

@@ -46,15 +46,9 @@ class Optimization_method(object):
         return so.minimize_scalar(f_alpha).x
 
     #search method. Takes as input x_k, s_k, some left/right conditions, upper/lower bounds for acceptible points and method parameters ro, (sigma), tau and chi.    
-    def inexact_line_search(self, x_k, s_k, LC, RC, aL, aU, ro = 0.1, tau = 0.1, chi = 9., sigma = 0.7):
+    def inexact_line_search(self, x_k, s_k, LC, RC, aL, aU, f_a, fp_a, ro = 0.1, tau = 0.1, chi = 9., sigma = 0.7):
 
-        a0 = 0.1
-
-        def f_a(a):
-            return self.p.fun(x_k + a * s_k)
-            
-        def fp_a(a):
-            return np.dot(s_k, self.p.grad(x_k + a * s_k))         
+        a0 = 0.1      
 
         def extra(a0, aL):
             return (a0 - aL)*fp_a(a0)/(fp_a(aL) - fp_a(a0))
@@ -64,15 +58,12 @@ class Optimization_method(object):
 
         def B1(a0, aL):
             da = extra(a0, aL)
-            da = max(da, tau*(a0 - aL))
-            da = min(da, chi*(a0 - aL))
+            da = min(max(da, tau*(a0 - aL)), chi*(a0 - aL))
             return [a0 + da, a0]
         
         def B2(a0, aL, aU):
-            aU = min(a0, aU)
-            temp = inter(a0, aL)
-            temp = max(temp, aL + tau*(aU - aL))
-            temp = min(temp, aU - tau*(aU - aL))
+            [aU, temp] = [min(a0, aU), inter(a0, aL)]
+            temp = min(max(temp, aL + tau*(aU - aL)), aU - tau*(aU - aL))
             return [temp, aU]
             
         while not (LC(a0) and RC(a0)):
@@ -104,7 +95,7 @@ class Optimization_method(object):
         def RC(a):
             return f_a(a) <= (f_a(aL) + ro*(a - aL)*fp_a(aL))
         
-        return self.inexact_line_search(x_k, s_k, LC, RC, aL, aU, ro, tau, chi, sigma)
+        return self.inexact_line_search(x_k, s_k, LC, RC, aL, aU, f_a, fp_a, ro, tau, chi, sigma)
 
     #calls inexact line search for Goldstein left and right conditions
     #parameters: x_k and s_k
@@ -126,4 +117,4 @@ class Optimization_method(object):
         def RC(a):
             return f_a(a) <= (f_a(aL) + ro*(a - aL)* fp_a(aL))
         
-        return self.inexact_line_search(x_k, s_k, LC, RC, aL, aU, ro, tau, chi)
+        return self.inexact_line_search(x_k, s_k, LC, RC, aL, aU, f_a, fp_a, ro, tau, chi)
