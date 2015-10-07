@@ -17,6 +17,19 @@ class TestQuasiNewton(unittest.TestCase):
         sol = newton.solve(self.deg2poly)
         np.testing.assert_array_almost_equal(sol, expected_minimum)
 
+    #@unittest.skip("skip")
+    def test_newton_poly2_max(self):
+        def dec(f):
+            def inner(x):
+                return f(-1*np.array(x))
+            return inner
+        expected_minimum = 0.0
+        gradient = lambda x: 2.0 * x
+        problem = Optimization_problem(self.deg2poly, np.array([2]), gradient,dec)
+        newton = Newton_method(problem, 1.e-8)
+        sol = newton.solve(self.deg2poly)
+        np.testing.assert_array_almost_equal(sol, expected_minimum)
+
     @unittest.skip("skip")
     def test_good_broyden_poly2(self):
         expected_minimum = 0.0
@@ -46,7 +59,6 @@ class TestQuasiNewton(unittest.TestCase):
         newton = Newton_method(problem, 1.e-8)
         try:
             sol = newton.solve(self.deg3poly)
-            print sol
             np.testing.assert_array_almost_equal(sol, expected_minimum)
         except Exception as err:
             assert('Divergence' in err.message)
@@ -86,7 +98,7 @@ class TestQuasiNewton(unittest.TestCase):
         sol = newton.solve(self.rosen)
         np.testing.assert_array_almost_equal(sol, expected_minimum)
 
-    #@unittest.skip("skip")
+    @unittest.skip("skip")
     def test_good_broyden_rosen(self):
         expected_minimum = np.array([1, 1])
         gradient = lambda x: np.array([202*x[0] - 200*x[1] - 2,200*(x[1] - x[0])])

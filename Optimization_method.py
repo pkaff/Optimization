@@ -20,7 +20,7 @@ class Optimization_method(object):
         x = x_pre + a * s_k
         if (sd.euclidean(x, 0) > 1.e10):
             raise Exception('Divergence')
-        while sd.euclidean(x, x_pre) > self.acc:
+        while sd.euclidean(self.p.grad(x),0) > self.acc:
             s_k = self.s(x, x_pre)
             a = self.alpha(x, s_k)
             x_temp = x
