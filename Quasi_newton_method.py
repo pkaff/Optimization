@@ -6,11 +6,13 @@ class Quasi_newton_method(Optimization_method):
         super(Quasi_newton_method, self).__init__(prob, accuracy, lst)
         self.H_k_1 = None
         self.g_k_1 = None
+        self.A_k_1 = None
         
     def s(self, x_k, x_k_1=None):
         if x_k_1 == None:
             # Initializing the Matrix and the gradient
-            self.H_k_1 = np.eye(len(x_k)) 
+            self.H_k_1 = np.eye(len(x_k))
+            self.A_k_1 = np.eye(len(x_k))
             self.g_k_1 = self.p.grad(x_k)
             return -1* self.g_k_1
         else:
