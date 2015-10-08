@@ -21,11 +21,11 @@ class Optimization_method(object):
         self.p.fun = f
         x_pre = self.p.start
         s_k = self.s(x_pre)
+
         a = self.alpha(x_pre, s_k)
         x = x_pre + a * s_k
         if (sd.euclidean(x, 0) > 1.e15) or (sd.euclidean(f(x), 0) > 1.e15):
             raise Exception('Divergence')
-        print(self.p.grad(x))
         while (sd.euclidean(self.p.grad(x),0) > self.acc) and (sd.euclidean(x,x_pre)!=0):
         #while (sd.euclidean(x,x_pre) > self.acc):
             s_k = self.s(x, x_pre)
@@ -36,6 +36,8 @@ class Optimization_method(object):
             x_pre = x_temp  
             if (sd.euclidean(x, 0) > 1.e15) or (sd.euclidean(f(x), 0) > 1.e15):
                 raise Exception('Divergence')
+            #print(self.p.grad(x))
+            #print "eu",sd.euclidean(x, x_pre)
         return [x, f(x)]
 
     def alpha(self, x_k, s_k):
@@ -60,7 +62,7 @@ class Optimization_method(object):
     #search method. Takes as input x_k, s_k, some left/right conditions, upper/lower bounds for acceptible points and method parameters ro, (sigma), tau and chi.    
     def inexact_line_search(self, x_k, s_k, LC, RC, aL, aU, f_a, fp_a, ro = 0.1, tau = 0.1, chi = 9., sigma = 0.7):
 
-        a0 = 1      
+        a0 = 0.1      
 
         def extra(a_0, a_L):
             return (a_0 - a_L)*fp_a(a_0)/(fp_a(a_L) - fp_a(a_0))
@@ -69,36 +71,39 @@ class Optimization_method(object):
             return ((a_0 - a_L)**2)*fp_a(a_L)/(2*(f_a(a_L) - f_a(a_0) + (a_0 - a_L)*fp_a(a_L)))   
 
         def B1(a0, aL):
-            print('a')
+            #print('a')
             da = extra(a0, aL)
             da = min(max(da, tau*(a0 - aL)), chi*(a0 - aL))
             
             return [a0 + da, a0]
         
         def B2(a0, aL, aU):
-            print('b')
+            #print('b')
             [aU, temp] = [min(a0, aU), inter(a0, aL)]
             temp = min(max(temp, aL + tau*(aU - aL)), aU - tau*(aU - aL))
             return [temp, aU]
+
         print("LC: ",LC(a0,aL))
         print("RC: ",RC(a0,aL))
+
         while not (LC(a0,aL) and RC(a0,aL)):
-            print(aU,a0,aL)
+            print(aL, a0, aU)
             if not LC(a0,aL):
                 [a0, aL] = B1(a0, aL)
             else:
                 [a0, aU] = B2(a0, aL, aU)
+                
             if(aL==a0):
                 break
                 
-        print(a0)
-        return -1*a0
+        #print(a0)
+        return a0
     
     #calls inexact line search for Wolfe-Powell left and right conditions
     #parameters: x_k and s_k
     #ro, sigma, tau and chi are method parameters. Accepted values for ro and sigma are ro in [0, 1/2] and sigma in (ro, 1]
     #aL and aU define the lower and upper bounds for acceptable points.
-    def WP(self, x_k, s_k, ro = 0.1, sigma = 0.7, tau = 0.1, chi = 9., aL = 0, aU = 1.e99):
+    def WP(self, x_k, s_k, ro = 0.1, sigma = 0.7, tau = 0.1, chi = 9., aL = 0., aU = 1.e99):
 
         assert 0 <= ro <= 0.5
         assert ro < sigma <= 1
@@ -121,7 +126,7 @@ class Optimization_method(object):
     #parameters: x_k and s_k
     #ro, tau and chi are method parameters. Accepted values for ro are in [0, 1/2]
     #aL and aU define the lower and upper bounds for acceptable points.
-    def goldstein(self, x_k, s_k, ro = 0.1, tau = 0.1, chi = 9., aL = 0, aU = 1.e99):
+    def goldstein(self, x_k, s_k, ro = 0.1, tau = 0.1, chi = 9., aL = 0., aU = 1.e99):
 
         assert 0 <= ro <= 0.5
 

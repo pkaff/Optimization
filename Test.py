@@ -98,7 +98,7 @@ class TestQuasiNewton(unittest.TestCase):
         expected_minimum = np.array([1, 1])
         gradient = lambda x: np.array([2*(200*x[0]**3 - 200*x[1]*x[0] + x[0] - 1),200*(x[1] - x[0]**2)])
         problem = Optimization_problem(self.rosen, np.array([1.5, 1.5]), gradient)
-        broyden = Good_broyden_method(problem, 1.e-8, 2)
+        broyden = Good_broyden_method(problem, 1.e-8, 3)
         sol = broyden.solve(self.rosen)
         print(sol[1])
         np.testing.assert_array_almost_equal(sol[0], expected_minimum, 5)
