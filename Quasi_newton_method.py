@@ -1,12 +1,18 @@
 from Optimization_method import *
+from abc import *
 
 class Quasi_newton_method(Optimization_method):
+    __metaclass__ = ABCMeta
 
     def __init__(self, prob, accuracy, lst = 1):
         super(Quasi_newton_method, self).__init__(prob, accuracy, lst)
         self.H_k_1 = None
         self.g_k_1 = None
         self.A_k_1 = None
+    
+    @abstractmethod
+    def update_matrix(self, gamma, delta):
+        pass
         
     def s(self, x_k, x_k_1=None):
         if x_k_1 == None:
