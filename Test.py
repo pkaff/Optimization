@@ -11,7 +11,25 @@ from BFGS import *
 #LST = 3 -> WP inexact line search
 
 class TestQuasiNewton(unittest.TestCase):
+   
+    #tries to solve a max-problem instead
+    @unittest.skip("skip")
+    def test_max(self):
+        expected_maximum = 0.0
+        function = lambda x: -1 * x**2
+        gradient = lambda x: -2.0 * x
 
+        def dec(s):
+            def ss(f):
+                return [s(-1 * f)[0], -1 * s(-1 * f)[1]]
+            return ss
+        test = dec(function)
+        print test(np.array([1, 1]))
+        problem = Optimization_problem(self.deg2poly, np.array([2]), gradient, dec)
+        newton = Newton_method(problem, 1.e-8, 1)
+        sol = newton.solve(self.deg2poly)
+        np.testing.assert_array_almost_equal(sol[0], expected_maximum)
+    
     #tests the newton method with a degree 2 polynomial in 1d
     #@unittest.skip("skip")
     def test_newton_poly2(self):
